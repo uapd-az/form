@@ -2970,6 +2970,32 @@ function renderResults(form, rows) {
     </div>`;
   }
 
+  // ── All Responses Table ───────────────────────────────
+  const allFields = form.fields || [];
+  if (allFields.length && rows.length) {
+    html += `<div class="results-section">
+      <div class="results-section-title">All Responses</div>
+      <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;font-family:var(--font-body)">
+        <thead>
+          <tr style="background:var(--ink);color:var(--cream)">`;
+    allFields.forEach(f => {
+      html += `<th style="padding:8px 12px;text-align:left;white-space:nowrap">${escHtml(f.label)}</th>`;
+    });
+    html += `</tr></thead><tbody>`;
+    rows.forEach((row, i) => {
+      const bg = i % 2 === 0 ? 'var(--cream)' : 'var(--cream-dark)';
+      html += `<tr style="background:${bg}">`;
+      allFields.forEach(f => {
+        const val = row[f.label];
+        const display = Array.isArray(val) ? val.join(', ') : (val || '—');
+        html += `<td style="padding:7px 12px;border-bottom:1px solid var(--border);vertical-align:top">${escHtml(display)}</td>`;
+      });
+      html += `</tr>`;
+    });
+    html += `</tbody></table></div></div>`;
+  }
+
   document.getElementById('results-body').innerHTML = html;
 }
 
