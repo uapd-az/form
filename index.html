@@ -2160,6 +2160,7 @@ function resolveScriptUrl(form) {
 function renderFormView(form) {
   const container = document.getElementById('form-view-content');
   const scriptUrl = resolveScriptUrl(form);
+  window.__respondentForm = form;
 
   let html = `
     ${form.headerImage ? `<img src="${form.headerImage}" class="form-view-header-image" alt="Form header">` : ''}
@@ -2167,7 +2168,7 @@ function renderFormView(form) {
       <h1>${escHtml(form.title || 'Form')}</h1>
       ${form.description ? `<p class="subtitle" style="font-style:italic;font-size:15px;margin-top:4px">${escHtml(form.description)}</p>` : ''}
     </div>
-    <form id="response-form" onsubmit="submitForm(event, '${escHtml(JSON.stringify(form)).replace(/'/g,"\\'")}')">
+    <form id="response-form" onsubmit="submitForm(event)">
   `;
 
   (form.fields || []).forEach((f, i) => {
@@ -2603,9 +2604,9 @@ function initLocationField(i) {
   });
 }
 
-function submitForm(event, formJson) {
+function submitForm(event) {
   event.preventDefault();
-  const form = JSON.parse(formJson);
+  const form = window.__respondentForm;
   const formEl = document.getElementById('response-form');
   const scriptUrl = resolveScriptUrl(form);
 
